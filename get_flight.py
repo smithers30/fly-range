@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from random import randint
 from selenium.webdriver.common.action_chains import ActionChains
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import os, stat
 import shutil
 import time
@@ -17,6 +17,7 @@ import cgi
 import pdb
 import re
 import glob
+
 
 stashPrice = 0
 driver = webdriver.Firefox()
@@ -35,7 +36,7 @@ def rmFiles(dir='images', ext='.png'):
 def performSearch():
     global stashPrice
 
-    driver.get('https://www.google.com/flights#flt=/m/02_n7./m/0rh6k.2019-09-04*/m/0rh6k./m/02_n7.2019-09-08;c:USD;e:1;so:1;sd:1;t:f')
+    driver.get('https://www.google.com/flights#flt=/m/02_n7.BZN.2020-01-11*BZN./m/02_n7.2020-01-15;c:USD;e:1;so:1;sd:1;t:f')
     # driver.get('https://www.google.com/flights#flt=/m/02_n7./m/0bld8.2019-08-30*/m/0bld8./m/02_n7.2019-09-03;c:USD;e:1;so:1;sd:1;t:f') # POLAND
     # driver.get("https://www.google.com/flights#flt=/m/01_d4./m/07dfk.2019-11-01*/m/07dfk./m/01_d4.2019-11-02;c:USD;e:1;so:1;sd:1;t:f") JAPAN
     driver.execute_script('''
@@ -84,7 +85,7 @@ def performSearch():
     stashPrice = compareResult()[0]
 
     if stashPrice:
-        for dept in range(0, 250):
+        for dept in range(0, 500):
             currURL = driver.current_url
             replStart = currURL.rfind('.') + 1
             lastDate = currURL[replStart:(replStart + 10)]
@@ -98,7 +99,7 @@ def performSearch():
                     .replace(lastDate, str(firstDateObj + timedelta(days=2)).split(' ')[0])
             )
 
-            for rtn in range(0, 2):
+            for rtn in range(0, 5):
                 try:
                     returnEle = compareResult()[1]
                     nextBtn = driver.find_elements_by_css_selector('.gws-flights-form__next')[1]
